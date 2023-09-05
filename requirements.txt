@@ -1,0 +1,12 @@
+langchain
+openai
+isort
+black
+jupyter
+tiktoken
+chromadb
+pypdf
+# pdf stuff
+unstructured
+pdf2image
+pdfminer
