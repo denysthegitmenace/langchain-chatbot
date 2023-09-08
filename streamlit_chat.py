@@ -4,8 +4,7 @@ from langchain.chains import ConversationalRetrievalChain, LLMChain
 from langchain.chat_models import ChatOpenAI
 from langchain.document_loaders import PyPDFLoader
 from langchain.embeddings import OpenAIEmbeddings
-from langchain.memory import (ConversationBufferMemory,
-                              ConversationSummaryMemory)
+from langchain.memory import ConversationBufferMemory, ConversationSummaryMemory
 from langchain.vectorstores import Chroma
 from streamlit_chat import message
 from streamlit_extras.add_vertical_space import add_vertical_space
