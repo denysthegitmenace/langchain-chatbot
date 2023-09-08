@@ -1,12 +1,15 @@
+# streamlit
+streamlit
+streamlit_chat
+streamlit_extras
+watchdog
+# langchain
 langchain
+chromadb
+pypdf
+# openai
 openai
+# helpers
 isort
 black
 jupyter
-tiktoken
-chromadb
-pypdf
-# pdf stuff
-unstructured
-pdf2image
-pdfminer

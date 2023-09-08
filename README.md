@@ -1,3 +1,3 @@
 # langchain-chatbot
 
-https://python.langchain.com/docs/use_cases/chatbots
+To use, you should have all the python packages from `requirements.txt` installed, and the environment variable `OPENAI_API_KEY` set with your ApenAI API key.
