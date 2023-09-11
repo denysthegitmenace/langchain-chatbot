@@ -2,3 +2,4 @@
 .venv
 *:Zone.Identifier
 target
+__pycache__/

@@ -1,10 +1,11 @@
 import langchain
 import streamlit as st
-from langchain.chains import ConversationalRetrievalChain, LLMChain
+from langchain.chains import ConversationalRetrievalChain
 from langchain.chat_models import ChatOpenAI
-from langchain.document_loaders import PyPDFLoader
+from langchain.document_loaders import TextLoader
 from langchain.embeddings import OpenAIEmbeddings
-from langchain.memory import ConversationBufferMemory, ConversationSummaryMemory
+from langchain.memory import ConversationBufferMemory
+from langchain.prompts import PromptTemplate
 from langchain.vectorstores import Chroma
 from streamlit_chat import message
 from streamlit_extras.add_vertical_space import add_vertical_space
@@ -34,18 +35,24 @@ if "generated" not in st.session_state:
 if "past" not in st.session_state:
     st.session_state["past"] = []
 
-llm = ChatOpenAI()
+chatGPT = ChatOpenAI()
 
-loader = PyPDFLoader("private data5.pdf")
-pages = loader.load_and_split()
-vectorstore = Chroma.from_documents(documents=pages, embedding=OpenAIEmbeddings())
-retriever = vectorstore.as_retriever()
+info_about_berlin_loader = TextLoader("real-time-information-on-berlin.txt")
 
-memory = ConversationBufferMemory(
-    llm=llm, memory_key="chat_history", return_messages=True
+vectorstore = Chroma.from_documents(
+    documents=info_about_berlin_loader.load(), embedding=OpenAIEmbeddings()
 )
-qa_chain = ConversationalRetrievalChain.from_llm(
-    llm, retriever=retriever, memory=memory
+
+
+template = """System: Use the following pieces of context to answer the users question. \nIf you don't know the answer, answer the question once again ignoring the context.\n----------------\n{context}\nHuman: {question}"""
+prompt = PromptTemplate(template=template, input_variables=["question", "context"])
+memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+
+chat_with_memory_and_knowledge = ConversationalRetrievalChain.from_llm(
+    chatGPT,
+    retriever=vectorstore.as_retriever(search_kwargs={"k": 1}),
+    memory=memory,
+    combine_docs_chain_kwargs={"prompt": prompt},
 )
 
 
@@ -58,7 +65,7 @@ user_input = get_text()
 
 
 if user_input:
-    result = result = qa_chain({"question": user_input})
+    result = result = chat_with_memory_and_knowledge({"question": user_input})
     output = f"Answer: {result['answer']}"
 
     st.session_state.past.append(user_input)
