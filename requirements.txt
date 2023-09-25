@@ -13,3 +13,5 @@ openai
 isort
 black
 jupyter
+psycopg2-binary
+wandb
